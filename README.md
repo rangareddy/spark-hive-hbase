@@ -1,5 +1,4 @@
-# spark-hive-hbase
-Spark Hive HBase Integration
+# Spark Hive HBase Integration
 
 ## Creating HBase table and Inserting data
 
