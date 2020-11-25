@@ -1,10 +1,10 @@
 # Spark Hive HBase Integration
 
 The following are the steps:
-1. Creating HBase table and Inserting data [I'm an inline-style link with title](https://www.google.com "Google's Homepage")
-2. Creating a Hive External Table for HBase and checking data
-3. Update the hive-hbase Configuration
-4. Launch Spark-Shell and check the table data
+1. [Creating HBase table and Inserting data](https://github.com/rangareddy/spark-hive-hbase/blob/main/README.md#creating-hbase-table-and-inserting-data)
+2. [Creating a Hive External Table for HBase and checking data](https://github.com/rangareddy/spark-hive-hbase#creating-a-hive-external-table-for-hbase-and-checking-data)
+3. [Update the hive-hbase Configuration](https://github.com/rangareddy/spark-hive-hbase#update-the-hive-hbase-configuration)
+4. [Launch Spark-Shell and check the table data](https://github.com/rangareddy/spark-hive-hbase#update-the-hive-hbase-configuration)
 
 ## Creating HBase table and Inserting data
 
