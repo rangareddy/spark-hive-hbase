@@ -113,11 +113,11 @@ Step2: Copy the **hive-hbase-handler** jar to spark jars folder.
 ```shell
 ln -s /opt/cloudera/parcels/CDH/jars/hive-hbase-handler-3.1.3000.7.1.1.0-565.jar /opt/cloudera/parcels/CDH/lib/spark/jars/
 ```
-Step3: Copy the **hbase-site.xml** file to **/etc/spark/conf/**
+Step3: Copy **hbase-site.xml** to spark conf directory.
 ```shell
 cp /opt/cloudera/parcels/CDH/lib/hbase/conf/hbase-site.xml /etc/spark/conf/
 ```
-### HDP:
+### HDP: 
 
 Step1: Find the **hive-hbase-handler** jar
 ```shell
@@ -128,7 +128,7 @@ Step2: Copy the **hive-hbase-handler** jar to spark jars folder.
 ```shell
 ln -s /usr/hdp/current/hive-client/lib/hive-hbase-handler-3.1.0.3.1.5.0-152.jar /usr/hdp/current/spark2-client/jars/
 ```
-Step3: Copy the **hbase-site.xml** file to **/usr/hdp/current/spark2-client/conf/**
+Step3: Step3: Copy **hbase-site.xml** to spark conf directory.
 ```shell
 cp /usr/hdp/current/hbase-client/conf/hbase-site.xml /usr/hdp/current/spark2-client/conf/
 ```
