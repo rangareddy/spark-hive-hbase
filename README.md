@@ -1,5 +1,11 @@
 # Spark Hive HBase Integration
 
+The following are the steps:
+1. Creating HBase table and Inserting data [I'm an inline-style link with title](https://www.google.com "Google's Homepage")
+2. Creating a Hive External Table for HBase and checking data
+3. Update the hive-hbase Configuration
+4. Launch Spark-Shell and check the table data
+
 ## Creating HBase table and Inserting data
 
 ### Login to HBase Shell
@@ -94,7 +100,7 @@ INFO  : OK
 +--------------------+----------------------+---------------------+-----------------------------+------------------------+
 2 rows selected (17.401 seconds)
 ```
-## Launch Spark-Shell and check the table data
+## Update the hive-hbase Configuration
 
 ### CDH/CDP:
 
@@ -111,11 +117,6 @@ Step3: Copy the **hbase-site.xml** file to **/etc/spark/conf/**
 ```shell
 cp /opt/cloudera/parcels/CDH/lib/hbase/conf/hbase-site.xml /etc/spark/conf/
 ```
-Step4: Launch the **spark-shell** by adding hbase jars and hive-hbase-handler jar.
-```shell
-sudo -u hive spark-shell --master yarn --jars /opt/cloudera/parcels/CDH/jars/hive-hbase-handler-*.jar, /opt/cloudera/parcels/CDH/lib/hbase/hbase-client-*.jar, /opt/cloudera/parcels/CDH/lib/hbase/hbase-common-*.jar, /opt/cloudera/parcels/CDH/lib/hbase/hbase-server-*.jar, /opt/cloudera/parcels/CDH/lib/hbase/hbase-hadoop2-compat-*.jar, /opt/cloudera/parcels/CDH/lib/hbase/hbase-protocol-*.jar,/opt/cloudera/parcels/CDH/jars/guava-28.*-jre.jar,/opt/cloudera/parcels/CDH/jars/htrace-core-3.2.0-incubating.jar --files /etc/spark/conf/hbase-site.xml
-```
-
 ### HDP:
 
 Step1: Find the **hive-hbase-handler** jar
@@ -131,11 +132,24 @@ Step3: Copy the **hbase-site.xml** file to **/usr/hdp/current/spark2-client/conf
 ```shell
 cp /usr/hdp/current/hbase-client/conf/hbase-site.xml /usr/hdp/current/spark2-client/conf/
 ```
-Step4: Launch the **spark-shell** by adding hbase jars and hive-hbase-handler jar.
+
+## Launch Spark-Shell and check the table data
+
+### Launch the Spark-Shell
+
+#### CDH/CDP:
+Launch the **spark-shell** by adding hbase jars and hive-hbase-handler jar.
+```shell
+sudo -u hive spark-shell --master yarn --jars /opt/cloudera/parcels/CDH/jars/hive-hbase-handler-*.jar, /opt/cloudera/parcels/CDH/lib/hbase/hbase-client-*.jar, /opt/cloudera/parcels/CDH/lib/hbase/hbase-common-*.jar, /opt/cloudera/parcels/CDH/lib/hbase/hbase-server-*.jar, /opt/cloudera/parcels/CDH/lib/hbase/hbase-hadoop2-compat-*.jar, /opt/cloudera/parcels/CDH/lib/hbase/hbase-protocol-*.jar,/opt/cloudera/parcels/CDH/jars/guava-28.*-jre.jar,/opt/cloudera/parcels/CDH/jars/htrace-core-3.2.0-incubating.jar --files /etc/spark/conf/hbase-site.xml
+```
+
+#### HDP:
+
 ```shell
 sudo -u hive spark-shell --master local[4] --jars /usr/hdp/current/hive-client/lib/hive-hbase-handler-*.jar,/usr/hdp/current/hive-client/lib/hbase-client-*.jar,/usr/hdp/current/hive-client/lib/hbase-common-*.jar,/usr/hdp/current/hive-client/lib/hbase-server-*.jar,/usr/hdp/current/hive-client/lib/metrics-core-*.jar,/usr/hdp/current/hive-client/lib/hbase-hadoop2-compat-*.jar,/usr/hdp/current/hive-client/lib/hbase-protocol-*.jar,/usr/hdp/current/hive-client/lib/guava-28.*-jre.jar,/usr/hdp/current/hive-client/lib/protobuf-java-2.5.0.jar,/usr/hdp/current/hive-client/lib/htrace-core-*-incubating.jar --files /usr/hdp/current/spark2-client/conf/hbase-site.xml
 ```
-## Checking the hive table data in spark-shell
+### Checking the hive table data in spark-shell
+
 ```shell
 scala> spark.catalog.listTables.show(truncate=false)
 scala> val empDF = spark.sql("select * from hive_emp_table")
