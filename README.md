@@ -10,12 +10,13 @@ hbase shell
 
 ### Creating HBase table
 ``` shell
-hbase(main):002:0> create 'hbase_emp_table', [{NAME => 'per', COMPRESSION => 'SNAPPY'}, {NAME => 'prof', COMPRESSION => 'SNAPPY'} ]
+
+hbase(main):001:0> create 'hbase_emp_table', [{NAME => 'per', COMPRESSION => 'SNAPPY'}, {NAME => 'prof', COMPRESSION => 'SNAPPY'} ]
 Created table hbase_emp_table
-Took 1.5483 seconds
+Took 1.5417 seconds
 => Hbase::Table - hbase_emp_table
 
-hbase(main):003:0> describe 'hbase_emp_table'
+hbase(main):002:0> describe 'hbase_emp_table'
 Table hbase_emp_table is ENABLED
 hbase_emp_table
 COLUMN FAMILIES DESCRIPTION
@@ -26,7 +27,7 @@ PREFETCH_BLOCKS_ON_OPEN => 'false', COMPRESSION => 'SNAPPY', BLOCKCACHE => 'true
 > 'NONE', TTL => 'FOREVER', MIN_VERSIONS => '0', REPLICATION_SCOPE => '0', BLOOMFILTER => 'ROW', CACHE_INDEX_ON_WRITE => 'false', IN_MEMORY => 'false', CACHE_BLOOMS_ON_WRITE => 'false',
  PREFETCH_BLOCKS_ON_OPEN => 'false', COMPRESSION => 'SNAPPY', BLOCKCACHE => 'true', BLOCKSIZE => '65536'}
 2 row(s)
-Took 0.2091 seconds
+Took 0.1846 seconds
 ```
 
 ### Inserting data to HBase table
@@ -44,18 +45,18 @@ put 'hbase_emp_table','2','prof:sal','80000'
 
 ### Checking the HBase table data
 ```shell
-hbase(main):015:0> scan 'hbase_emp_table'
+hbase(main):012:0> scan 'hbase_emp_table'
 ROW                                             COLUMN+CELL
- 1                                              column=per:age, timestamp=1606281940257, value=32
- 1                                              column=per:name, timestamp=1606281940212, value=Ranga Reddy
- 1                                              column=prof:des, timestamp=1606281940292, value=Senior Software Engineer
- 1                                              column=prof:sal, timestamp=1606281940327, value=50000
- 2                                              column=per:age, timestamp=1606281940409, value=3
- 2                                              column=per:name, timestamp=1606281940381, value=Nishanth Reddy
- 2                                              column=prof:des, timestamp=1606281940443, value=Software Engineer
- 2                                              column=prof:sal, timestamp=1606281940516, value=80000
+ 1                                              column=per:age, timestamp=1606304606241, value=32
+ 1                                              column=per:name, timestamp=1606304606204, value=Ranga Reddy
+ 1                                              column=prof:des, timestamp=1606304606269, value=Senior Software Engineer
+ 1                                              column=prof:sal, timestamp=1606304606301, value=50000
+ 2                                              column=per:age, timestamp=1606304606362, value=3
+ 2                                              column=per:name, timestamp=1606304606338, value=Nishanth Reddy
+ 2                                              column=prof:des, timestamp=1606304606387, value=Software Engineer
+ 2                                              column=prof:sal, timestamp=1606304608374, value=80000
 2 row(s)
-Took 0.0366 seconds
+Took 0.0513 seconds
 ```
 
 ## Creating a Hive External Table for HBase and checking data
@@ -67,9 +68,10 @@ Apache provides a storage handler and a SerDe that enable Hive to read the HBase
 CREATE EXTERNAL TABLE hive_table_name colname coltype[, colname coltype,...] 
 ROW FORMAT SERDE 'org.apache.hadoop.hive.hbase.HBaseSerDe'
 STORED BY 'org.apache.hadoop.hive.hbase.HBaseStorageHandler' 
-WITH SERDEPROPERTIES ('hbase.columns.mapping'=':key,value:key)
+WITH SERDEPROPERTIES ('hbase.columns.mapping'=':key,col_family:col_name)
 TBLPROPERTIES("hbase.table.name" = "hbase_table_name")
 ```
+The values provided in the **hbase.columns.mapping** property correspond one-for-one with column names of the hive table. HBase column names are **fully qualified by column family** and we will use the special token **:key** to represent the **Rowkey**. 
 
 **Example:**
 ```sql
@@ -79,15 +81,19 @@ WITH SERDEPROPERTIES ("hbase.columns.mapping" = ":key,per:name,per:age,prof:des,
 TBLPROPERTIES("hbase.table.name" = "hbase_emp_table");
 ```
 
-The values provided in the **hbase.columns.mapping** property correspond one-for-one with column names of the hive table. HBase column names are **fully qualified by column family** and we will use the special token **:key** to represent the **Rowkey**. The above example makes rows from the HBase table **Employee** available via the Hive table **employee**. The employee column rowkey maps to the HBase’s table’s rowkey, name to name in the E column family, designation to designation in the E column family and salary to salary in the E family.
+In the above example makes rows from the HBase table **hbase_emp_table** available via the Hive table **hive_emp_table**. The **hive_emp_table** primary key column maps to the HBase’s **hbase_emp_table** table’s **rowkey**, name -> name and age -> age in the **per** (personal) column family and des -> designation and sal -> salary in the **prof** (professional) column family.
 
 ### Select the Hive table data
 ```sql
 hive> select * from hive_emp_table;
-OK
-1	Ranga Reddy	Software Engineer	50000
-2	Nishanth Reddy	Software Engineer	80000
-Time taken: 0.532 seconds, Fetched: 2 row(s)
+INFO  : OK
++--------------------+----------------------+---------------------+-----------------------------+------------------------+
+| hive_emp_table.id  | hive_emp_table.name  | hive_emp_table.age  | hive_emp_table.designation  | hive_emp_table.salary  |
++--------------------+----------------------+---------------------+-----------------------------+------------------------+
+| 1                  | Ranga Reddy          | 32                  | Senior Software Engineer    | 50000                  |
+| 2                  | Nishanth Reddy       | 3                   | Software Engineer           | 80000                  |
++--------------------+----------------------+---------------------+-----------------------------+------------------------+
+2 rows selected (17.401 seconds)
 ```
 ## Launch Spark-Shell and check the table data
 
