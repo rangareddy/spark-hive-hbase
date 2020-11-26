@@ -146,8 +146,27 @@ sudo -u hive spark-shell --master yarn --jars /opt/cloudera/parcels/CDH/jars/hiv
 #### HDP:
 
 ```shell
-sudo -u hive spark-shell --master local[4] --jars /usr/hdp/current/hive-client/lib/hive-hbase-handler-*.jar,/usr/hdp/current/hive-client/lib/hbase-client-*.jar,/usr/hdp/current/hive-client/lib/hbase-common-*.jar,/usr/hdp/current/hive-client/lib/hbase-server-*.jar,/usr/hdp/current/hive-client/lib/metrics-core-*.jar,/usr/hdp/current/hive-client/lib/hbase-hadoop2-compat-*.jar,/usr/hdp/current/hive-client/lib/hbase-protocol-*.jar,/usr/hdp/current/hive-client/lib/guava-28.*-jre.jar,/usr/hdp/current/hive-client/lib/protobuf-java-2.5.0.jar,/usr/hdp/current/hive-client/lib/htrace-core-*-incubating.jar --files /usr/hdp/current/spark2-client/conf/hbase-site.xml
+sudo -u hive spark-shell --master local[4] \
+--conf spark.sql.hive.metastore.jars=/usr/hdp/current/spark2-client/standalone-metastore/*:/usr/hdp/current/hive-client/lib/hive-hbase-handler.jar \
+--jars /usr/hdp/current/hive-client/lib/hive-hbase-handler.jar,\
+/usr/hdp/current/hbase-client/lib/hbase-common.jar,\
+/usr/hdp/current/hbase-client/lib/hbase-client.jar,\
+/usr/hdp/current/hbase-client/lib/hbase-server.jar,\
+/usr/hdp/current/hbase-client/lib/hbase-protocol.jar,\
+/usr/hdp/current/hbase-client/lib/hbase-mapreduce-*.jar,\
+/usr/hdp/current/hbase-client/lib/hbase-metrics.jar,\
+/usr/hdp/current/hbase-client/lib/hbase-protocol-shaded.jar,\
+/usr/hdp/current/hbase-client/lib/hbase-shaded-miscellaneous-*.jar,\
+/usr/hdp/current/hbase-client/lib/hbase-shaded-netty-*.jar,\
+/usr/hdp/current/hbase-client/lib/hbase-shaded-protobuf-*.jar,\
+/usr/hdp/current/hbase-client/lib/hbase-zookeeper.jar,\
+/usr/hdp/current/hbase-client/lib/protobuf-java-*.jar,\
+/usr/hdp/current/hbase-client/lib/guava-28*-jre.jar,\
+/usr/hdp/current/hive-client/lib/htrace-core-*-incubating.jar \
+--files /etc/spark2/conf/hbase-site.xml
 ```
+> If **/usr/hdp/current/hive-client/lib/hive-hbase-handler.jar** file already copied to **/usr/hdp/current/spark2-client/standalone-metastore/** directory then we can ignore **--conf spark.sql.hive.metastore.jars** configuration.
+
 ### Checking the hive table data in spark-shell
 
 ```shell
